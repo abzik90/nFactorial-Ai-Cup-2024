@@ -1,11 +1,11 @@
 # nFactorial-Ai-Cup-2024
 Fork this repository and build nFactorial Ai Cup 2024 projects 
 
-## < Your Name >
+## Nurbol Bizhigit
 
-## < Your App's Name >
+## T-1000
 
-## < Your App's description, technical considerations, etc. >
+## This is a GPT wrapper that lowers the entrance levels for industrial robotic arm programming. It converts the spoken language into RoboDK python script. Potentially images could be fed to replicate the movements or to provide context for the bot. 
 
 
 ## Typeform to submit:
