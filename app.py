@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import openai
-import os, json, time
+import os, json, time, subprocess
 
 app = Flask(__name__)
 
@@ -51,10 +51,15 @@ def send_message():
         thread_id=thread.id
     )
     
-    # for msg in reversed(messages.data):
-    #     print(msg.role, ":", msg.content[0].text.value)
-    
     response = messages.data[0].content[0].text.value
+    with open('gpt-kuka.py', 'w') as file:
+        response = response.replace("```python", "").replace("```", "")
+        file.write(response)
+
+    try:
+        subprocess.run(['python3', 'gpt-kuka.py'])
+    except Exception as e:
+        print(e)
     return jsonify({'message': response})
 
 if __name__ == '__main__':
