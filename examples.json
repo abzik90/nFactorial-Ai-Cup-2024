@@ -1,0 +1,23 @@
+[
+    {
+      "name": "Weld example",
+      "description": "This example shows an advanced pick and place application. In this example, placing all the objects is automatically done through Python. We can place any object programmatically thanks to our Python API. Using the Python API we can create, modify or delete any objects. Additionally, we can also program the robot moves in the same Python script, this will allow us to automatically generate the robot program.",
+      "code": "from robolink import *\nfrom robodk import *\n\n# Any interaction with RoboDK must be done through\n# Robolink()\nRL = Robolink()\n\n# get the robot item:\nrobot = RL.Item('KUKA KR 6 R900 sixx')\n\n# get the home target and the welding targets:\nhome = RL.Item('Home')\ntarget = RL.Item('Target 1')\n# get the pose of the target (4x4 matrix):\nposeref = target.Pose()\n\n# move the robot to home, then to the center:\nrobot.MoveJ(home)\nrobot.MoveJ(target)\n\n# make an hexagon around the center:\nfor i in range(7):\n    ang = i*2*pi/6 #angle: 0, 60, 120, ...\n    posei = poseref*rotz(ang)*transl(200,0,0)*rotz(-ang)\n    robot.MoveL(posei)\n\n# move back to the center, then home:\nrobot.MoveL(target)\nrobot.MoveJ(home)"
+    },
+    {
+      "name": "Robot modeling example",
+      "description": "DH table of the robot: ABB IRB 120-3/0.6. Degrees of freedom: 6 for ABB IRB 120-3/0.6.",
+      "code": "#type help(\"robolink\") or help(\"robodk\") for more information\nfrom robolink import *\nfrom robodk import *\nRL = Robolink()\n\n\ndef FK_Robot(dh_table, joints):\n    \"\"\"Computes the forward kinematics of the robot.\n    dh_table must be in mm and radians, the joints vector must be in degrees.\"\"\"\n    Habs = []\n    Hrel = []    \n    nlinks = len(dh_table)\n    HiAbs = eye(4)\n    for i in range(nlinks):\n        [rz,tx,tz,rx] = dh_table[i]\n        rz = rz + joints[i]*pi/180\n        Hi = dh(rz,tx,tz,rx)\n        HiAbs = HiAbs*Hi\n        Hrel.append(Hi)\n        Habs.append(HiAbs)\n\n    return [HiAbs, Habs, Hrel]\n\n...\n"
+    },
+    {
+      "name": "Pick and place",
+      "description": "Setup global parameters: BALL_DIAMETER = 100, APPROACH = 100 (approach distance with the robot, in mm), nTCPs = 6 (number of TCP's in the tool).",
+      "code": "#type help(\"robolink\") or help(\"robodk\") for more information\nfrom robolink import *\nfrom robodk import *\n\n\n# Setup global parameters\nBALL_DIAMETER = 100 # diameter of one ball\nAPPROACH = 100      # approach distance with the robot, in mm\nnTCPs = 6           # number of TCP's in the tool\n\n..."
+    },
+    {
+      "name": "Drawing with a robot",
+      "description": "Function definitions: point2D_2_pose(point, tangent), svg_draw_quick(svg_img, board, pix_ref).",
+      "code": "#type help(\"robolink\") or help(\"robodk\") for more information\nfrom robolink import *\nfrom robodk import *\n\nimport sys \nimport os\nimport re\n   \n#--------------------------------------------------------------------------------\n# function definitions:\ndef point2D_2_pose(point, tangent):\n    \"\"\"Converts a 2D point to a 3D pose in the XY plane (4x4 homogeneous matrix)\"\"\"\n    return transl(point.x, point.y, 0)*rotz(tangent.angle())\n\n..."
+    }
+]
+  
